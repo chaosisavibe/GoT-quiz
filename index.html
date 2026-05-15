@@ -397,25 +397,51 @@
       #result-section {
         transition: opacity 1.2s ease;
         background: #000;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
       }
       #result-section.off {
         opacity: 0 !important;
         pointer-events: none !important;
+        overflow: hidden;
       }
       #result-section:not(.off) {
         opacity: 1 !important;
       }
 
+      /* 固定背景层：角色海报始终铺满视口 */
       .result-stage {
-        position: absolute;
+        position: fixed;
         inset: 0;
-        overflow: hidden;
+        z-index: 0;
+        overflow: visible;
+        pointer-events: none;
         background: #0a0a0c;
         opacity: 0;
         transition: opacity 1.2s ease;
       }
       #result-section:not(.off) .result-stage {
         opacity: 1;
+      }
+
+      /* 自然流内容层：叠加在固定背景之上，撑开滚动 */
+      .result-content {
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .result-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        min-height: 100vh;
+      }
+      .detail-area {
+        position: relative;
+        z-index: 1;
+        padding-bottom: 2rem;
       }
 
       /* Hero bg — 全图展示，不裁切 */
@@ -459,16 +485,6 @@
       }
       #result-section:not(.off) .result-scrim {
         opacity: 1;
-      }
-
-      /* 内容层：靠底排列 */
-      .result-body {
-        position: relative;
-        z-index: 10;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        min-height: 100dvh;
       }
 
       /* 文字叠加 — 浮入动效 */
@@ -897,8 +913,8 @@
     <section
       id="result-section"
       class="section-fade off pointer-events-none fixed inset-0 z-50 opacity-0"
-      style="overflow-y:auto"
     >
+      <!-- 固定背景层：角色图 + 遮罩 + 粒子 -->
       <div id="result-stage" class="result-stage">
         <div
           id="result-hero-desktop"
@@ -912,7 +928,10 @@
         ></div>
         <div class="result-scrim" aria-hidden="true"></div>
         <div id="particle-container"></div>
+      </div>
 
+      <!-- 自然流内容层：叠加在固定背景之上，可滚动 -->
+      <div id="result-content" class="result-content">
         <div class="result-body">
           <div class="result-copy text-left text-stone-100">
             <p
@@ -932,21 +951,19 @@
             ></p>
             <div id="result-archive" class="archive-panel"></div>
           </div>
-        </div>
-      </div>
 
-      <div class="pointer-events-none absolute bottom-0 left-0 right-0 z-20">
-        <div class="mx-auto w-[min(90vw,42rem)]">
-          <div class="pt-8 pb-6 text-center">
+          <div class="pt-6 pb-0 text-center sm:pt-8 sm:pb-2">
             <button
               type="button"
               id="toggle-detail-btn"
-              class="pointer-events-auto text-sm font-light tracking-[0.2em] text-stone-400 underline decoration-white/15 underline-offset-[10px] transition hover:text-stone-200 hover:decoration-white/35"
+              class="text-sm font-light tracking-[0.2em] text-stone-400 underline decoration-white/15 underline-offset-[10px] transition hover:text-stone-200 hover:decoration-white/35"
             >
               展开卷书纪传
             </button>
           </div>
+        </div>
 
+        <div class="detail-area mx-auto w-[min(90vw,42rem)]">
           <div id="result-detail" class="detail-reveal mx-auto w-full max-w-2xl">
             <div
               class="rounded-2xl border border-white/10 bg-black/55 px-6 py-6 text-left backdrop-blur-md sm:px-8"
@@ -967,7 +984,7 @@
             <button
               type="button"
               id="restart-btn"
-              class="pointer-events-auto text-sm font-light tracking-widest text-stone-500 transition hover:text-stone-300"
+              class="text-sm font-light tracking-widest text-stone-500 transition hover:text-stone-300"
             >
               再历一次试炼
             </button>
