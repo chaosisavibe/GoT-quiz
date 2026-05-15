@@ -53,9 +53,13 @@
 
       html {
         min-height: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
       }
       body {
         min-height: 100dvh;
+        max-width: 100vw;
+        overflow-x: hidden;
         background-color: #030304;
       }
 
@@ -398,6 +402,7 @@
         transition: opacity 1.2s ease;
         background: #000;
         overflow-y: auto;
+        overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
       }
       #result-section.off {
@@ -428,7 +433,7 @@
       .result-content {
         position: relative;
         z-index: 1;
-        min-height: 100vh;
+        min-height: 100dvh;
         display: flex;
         flex-direction: column;
       }
@@ -436,7 +441,7 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        min-height: 100vh;
+        min-height: 100dvh;
       }
       .detail-area {
         position: relative;
@@ -843,6 +848,18 @@
       .archive-stat-value.rare { color: var(--fa-text, #d4af37); }
       .archive-stat-value.extremelyRare { color: rgba(200,180,160,0.75); }
 
+      /* 移动端紧凑：确保按钮首屏可见，不破坏氛围 */
+      @media (max-width: 480px) {
+        .result-copy {
+          padding: 1rem 1rem 1.5rem;
+        }
+        .archive-panel {
+          margin-top: 0.4rem;
+        }
+        .result-body .toggle-btn-wrap {
+          padding-top: 0.75rem;
+        }
+      }
     </style>
   </head>
   <body class="grain font-sans text-stone-200 antialiased">
@@ -952,7 +969,7 @@
             <div id="result-archive" class="archive-panel"></div>
           </div>
 
-          <div class="pt-6 pb-0 text-center sm:pt-8 sm:pb-2">
+          <div class="toggle-btn-wrap pt-6 pb-0 text-center sm:pt-8 sm:pb-2">
             <button
               type="button"
               id="toggle-detail-btn"
